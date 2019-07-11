@@ -42,7 +42,7 @@ if(isset($_POST['usu_dceml']) && !empty($_POST['usu_dceml'])) {
                         <label for="usu_dcsnh">Senha:</label>
                         <input class="form-control" type="password" name="usu_dcsnh" id="usu_dcsnh" required=""/>
                     </div>
-                    <input class="btn btn-default btn-lg" type="submit" value="Cadastrar"/> 
+                    <input class="btn btn-default btn-lg" type="submit" value="Acessar"/> 
                 </form>
             </div>
         </div>
