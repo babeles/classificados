@@ -22,7 +22,7 @@ if(isset($_POST['usu_dceml']) && !empty($_POST['usu_dceml'])) {
         <div class="row">
             <div class="col-sm-12">
                 <div class="alert alert-danger">
-                    Usuário e/ou Senha Errados!.
+                    Usuário e/ou Senha Invaida!.
                 </div>
             </div>
         </div>
