@@ -15,7 +15,7 @@
                 <th>Foto</th>
                 <th>Titulo</th>
                 <th>Valor</th>
-                <th>Ações</th>
+                <th class="text-center">Ações</th>
             </tr>
         </thead>
         <tbody>
@@ -24,12 +24,18 @@
             $anuncios = new Anuncios();
             foreach ($anuncios->getMeusAnuncios() as $row): ?>
             <tr>
-                <td><img src="assets/images/anuncios/<?=$row['img_url']?>" border="0"/></td>
+                <td>
+                <?php if(!empty($row['img_url'])): ?>
+                    <img src="assets/images/anuncios/<?=$row['img_url']?>" height="50" border="0"/>
+                <?php else: ?>
+                    <img src="assets/images/default.jpg" height="50" border="0"/>
+                <?php endif; ?>
+                </td>
                 <td><?=$row['anu_dctit']?></td>
                 <td>R$ <?= number_format($row['anu_vr'],2)?></td>
-                <td>
-                    <a href=""></a>
-                    <a href=""></a>
+                <td style="width: 150px; text-align: center">
+                    <a href="editar-anuncios.php?anu_iduni=<?=$row['anu_iduni']?>" class="btn btn-success btn-sm">Editar</a>
+                    <a href="excluir-anuncios.php?anu_iduni=<?=$row['anu_iduni']?>" class="btn btn-danger btn-sm">Excluir</a>
                 </td>
             </tr>
             <?php endforeach; ?>

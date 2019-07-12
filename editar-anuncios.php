@@ -3,7 +3,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <h1>Meus Anúncios - Adicionar Anúncio </h1>
+            <h1>Meus Anúncios - Editar Anúncio </h1>
             <hr>
         </div>
     </div>
@@ -14,6 +14,11 @@
 require './class/anuncios.class.php';
 $anuncios = new Anuncios();
 
+if(isset($_GET['anu_iduni']) && !empty($_GET['anu_iduni'])) {
+    $anu_iduni = addslashes($_GET['anu_iduni']);
+    $editAnuncios = $anuncios->getEditarAnuncios($anu_iduni);
+}
+
 if(isset($_POST['anu_dctit']) && !empty($_POST['anu_dctit'])) {
     $anu_iduni_cat = addslashes($_POST['cat_iduni']);
     $anu_dctit = addslashes($_POST['anu_dctit']);
@@ -21,10 +26,10 @@ if(isset($_POST['anu_dctit']) && !empty($_POST['anu_dctit'])) {
     $anu_dcest = addslashes($_POST['anu_dcest']);
     $anu_dc = addslashes($_POST['anu_dc']);
     
-    $anuncios->adicionarAnuncios($anu_iduni_cat, $anu_dctit, $anu_dc, $anu_vr, $anu_dcest);
+    $anuncios->alterarAnuncios($anu_iduni_cat, $anu_dctit, $anu_dc, $anu_vr, $anu_dcest, $anu_iduni);
 ?>
             <div class="alert alert-success">
-                Anúncio adicionado com sucesso, <a class="alert-link" href="meus-anuncios.php">Clique aqui, Meus Anúncios</a>
+                Anúncio alterado com sucesso, <a class="alert-link" href="meus-anuncios.php">Meus Anúncios</a>
             </div>
 <?php
 }
@@ -43,38 +48,38 @@ if(isset($_POST['anu_dctit']) && !empty($_POST['anu_dctit'])) {
                     require './class/categorias.class.php';
                     $categorias = new Categorias();
                     foreach ($categorias->getTodasCategorias() as $row): ?>
-                        <option value="<?=$row['cat_iduni']?>"><?=$row['cat_nm']?></option> 
+                        <option value="<?=$row['cat_iduni']?>" <?=$editAnuncios['anu_iduni_cat']==$row['cat_iduni']?'selected="selected"':'';?> ><?=$row['cat_nm']?></option> 
                     <?php endforeach; ?>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label for="anu_dctit">Título:</label>
-                    <input class="form-control" type="text" name="anu_dctit" id="anu_dctit" required=""/>
+                    <input class="form-control" type="text" name="anu_dctit" id="anu_dctit" value="<?=$editAnuncios['anu_dctit']?>" required=""/>
                 </div>
                 
                 <div class="form-group">
                     <label for="anu_vr">Valor:</label>
-                    <input class="form-control" type="text" name="anu_vr" id="anu_vr" required=""/>
+                    <input class="form-control" type="text" name="anu_vr" id="anu_vr" value="<?=$editAnuncios['anu_vr']?>" required=""/>
                 </div>
                 
                 <div class="form-group">
                     <label for="anu_dcest">Estado de Conservação:</label>
                     <select class="form-control" name="anu_dcest" id="anu_dcest" required="">
                         <option></option>
-                        <option id="0">RUIM</option>
-                        <option id="1">BOM</option>
-                        <option id="2">ÓTIMO</option>
+                        <option id="0" <?=$editAnuncios['anu_dcest']=='0'?'selected="selected"':'';?> >RUIM</option>
+                        <option id="1" <?=$editAnuncios['anu_dcest']=='1'?'selected="selected"':'';?> >BOM</option>
+                        <option id="2" <?=$editAnuncios['anu_dcest']=='2'?'selected="selected"':'';?> >ÓTIMO</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label for="anu_dc">Descrição:</label>
-                    <textarea class="form-control" type="text" name="anu_dc" id="anu_dc" required=""></textarea>
+                    <textarea class="form-control" type="text" name="anu_dc" id="anu_dc" required=""><?=$editAnuncios['anu_dc']?></textarea>
                 </div>
                 
                 <div class="form-group">
-                    <input class="btn btn-default btn-lg" type="submit" value="Adicionar"/>
+                    <input class="btn btn-default btn-lg" type="submit" value="Salvar"/>
                 </div> 
             </form>
         </div>

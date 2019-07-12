@@ -7,7 +7,7 @@
     <div class="jumbotron">
 <?php if(isset($_SESSION['cLogin']) && !empty($_SESSION['cLogin'])): 
          $usu_nm = $usuario->getUsuario($_SESSION['cLogin']); ?>        
-            <h3>Seja Bem-vindo <?=$usu_nm['usu_nm']?></h3>
+        <h3>Seja Bem-vindo <?=$usu_nm['usu_nm']?></h3>
 <?php endif; ?> 
         <h4>Nós temos hoje 999 anúncios.</h4>
         <h4>E mais de 999 usuários cadastrados.</h4>
