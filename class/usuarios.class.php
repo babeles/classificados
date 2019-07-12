@@ -37,5 +37,20 @@ class Usuarios {
             return false;
         }
     }
+    
+    public function getUsuario($usu_iduni) {
+        global $pdo;
+        global $pdo;
+        $sql = $pdo->prepare("SELECT * FROM usuarios WHERE usu_iduni = :usu_iduni");
+        $sql->bindValue(":usu_iduni", $usu_iduni);
+        $sql->execute();
+        
+        if($sql->rowCount() > 0) {
+            return $sql->fetch();
+        } else {
+            return false;
+        }
+  
+    }
      
 }

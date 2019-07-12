@@ -1,9 +1,16 @@
-<?php require './pages/header.php'; ?>
+<?php require './pages/header.php'; 
+ require './class/usuarios.class.php';
+ $usuario = new Usuarios();
+?>
         
 <div class="container-fluid">
     <div class="jumbotron">
-        <h2>Nós temos hoje 999 anúncios.</h2>
-        <p>E mais de 999 usuários cadastrados.</p>
+<?php if(isset($_SESSION['cLogin']) && !empty($_SESSION['cLogin'])): 
+         $usu_nm = $usuario->getUsuario($_SESSION['cLogin']); ?>        
+            <h3>Seja Bem-vindo <?=$usu_nm['usu_nm']?></h3>
+<?php endif; ?> 
+        <h4>Nós temos hoje 999 anúncios.</h4>
+        <h4>E mais de 999 usuários cadastrados.</h4>
     </div>
 
     <div class="row">
