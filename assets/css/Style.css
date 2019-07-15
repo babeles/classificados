@@ -1,3 +1,16 @@
 body {
     font-family: 'Lato';
 }
+
+.foto_item {
+    width: 150px;
+    height: 200px;
+    float: left;
+    margin-right: 10px;
+    text-align: center;
+}
+
+.foto_item img {
+    width: 150px;
+    margin-bottom: 5px;
+}

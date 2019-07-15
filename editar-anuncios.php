@@ -26,7 +26,13 @@ if(isset($_POST['anu_dctit']) && !empty($_POST['anu_dctit'])) {
     $anu_dcest = addslashes($_POST['anu_dcest']);
     $anu_dc = addslashes($_POST['anu_dc']);
     
-    $anuncios->alterarAnuncios($anu_iduni_cat, $anu_dctit, $anu_dc, $anu_vr, $anu_dcest, $anu_iduni);
+    if(isset($_FILES['fotos'])) {
+       $fotos = $_FILES['fotos']; 
+    } else {
+       $fotos = array();
+    }
+        
+    $anuncios->alterarAnuncios($anu_iduni_cat, $anu_dctit, $anu_dc, $anu_vr, $anu_dcest, $fotos, $anu_iduni);
 ?>
             <div class="alert alert-success">
                 Anúncio alterado com sucesso, <a class="alert-link" href="meus-anuncios.php">Meus Anúncios</a>
@@ -67,15 +73,34 @@ if(isset($_POST['anu_dctit']) && !empty($_POST['anu_dctit'])) {
                     <label for="anu_dcest">Estado de Conservação:</label>
                     <select class="form-control" name="anu_dcest" id="anu_dcest" required="">
                         <option></option>
-                        <option id="0" <?=$editAnuncios['anu_dcest']=='0'?'selected="selected"':'';?> >RUIM</option>
-                        <option id="1" <?=$editAnuncios['anu_dcest']=='1'?'selected="selected"':'';?> >BOM</option>
-                        <option id="2" <?=$editAnuncios['anu_dcest']=='2'?'selected="selected"':'';?> >ÓTIMO</option>
+                        <option value="0" <?=$editAnuncios['anu_dcest']==0?'selected="selected"':'';?> >RUIM</option>
+                        <option value="1" <?=$editAnuncios['anu_dcest']==1?'selected="selected"':'';?> >BOM</option>
+                        <option value="2" <?=$editAnuncios['anu_dcest']==2?'selected="selected"':'';?> >ÓTIMO</option>
                     </select>
                 </div>
                 
                 <div class="form-group">
                     <label for="anu_dc">Descrição:</label>
                     <textarea class="form-control" type="text" name="anu_dc" id="anu_dc" required=""><?=$editAnuncios['anu_dc']?></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="add_foto">Fotos do Anúmcios:</label>
+                    <input type="file" name="fotos[]" id="add_img" multiple=""/>
+                </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Fotos do Anúncios</strong>
+                    </div>
+                    <div class="panel-body">
+                    <?php foreach($anuncios->getImagensAnuncios($editAnuncios['anu_iduni']) as $fotos): ?>
+                        <div class="foto_item">
+                            <img src="assets/images/anuncios/<?=$fotos['img_url']?>" class="img-thumbnail" border="0"/><br>
+                            <a href="excluir-imagem.php?img_iduni=<?=$fotos['img_iduni']?>" class="btn btn-danger btn-block">Excluir Imagens</a>
+                        </div>
+                    <?php endforeach; ?>
+                    </div>
                 </div>
                 
                 <div class="form-group">
