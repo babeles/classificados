@@ -1,16 +1,17 @@
 <?php
 class Usuarios {
     
-    public function cadastrarUsuario($usu_nm, $usu_dceml, $usu_dcsnh, $usu_nrtel) {
+    public function cadastrarUsuario($usu_nm, $usu_dcapl, $usu_dceml, $usu_dcsnh, $usu_nrtel) {
         global $pdo;
         $sql = $pdo->prepare("SELECT * FROM usuarios WHERE usu_dceml = :usu_dceml");
         $sql->bindValue(":usu_dceml", $usu_dceml);
         $sql->execute();
         
         if($sql->rowCount() == 0) {
-            $sql = $pdo->prepare("INSERT INTO usuarios (usu_nm, usu_dceml, usu_dcsnh, usu_nrtel) "
-                    . "VALUES (:usu_nm, :usu_dceml, :usu_dcsnh, :usu_nrtel)");
+            $sql = $pdo->prepare("INSERT INTO usuarios (usu_nm, usu_dcapl, usu_dceml, usu_dcsnh, usu_nrtel) "
+                    . "VALUES (:usu_nm, :usu_dcapl, :usu_dceml, :usu_dcsnh, :usu_nrtel)");
             $sql->bindValue(":usu_nm", ucwords($usu_nm));
+            $sql->bindValue(":usu_dcapl", ucwords($usu_dcapl));
             $sql->bindValue("usu_dceml", $usu_dceml);
             $sql->bindValue("usu_dcsnh", md5($usu_dcsnh));
             $sql->bindValue(":usu_nrtel", $usu_nrtel);
@@ -51,6 +52,18 @@ class Usuarios {
             return false;
         }
   
+    }
+    
+    public function qtUsuaruio() {
+        global $pdo;
+        $sql = $pdo->query("SELECT COUNT(*) AS qt_usuarios FROM usuarios");
+        
+        if($sql->rowCount() > 0) {
+            return $sql->fetch();
+        } else {
+            return array();
+        }
+        
     }
      
 }

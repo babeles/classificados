@@ -13,12 +13,13 @@ $usuario = new Usuarios();
 
 if(isset($_POST['usu_nm']) && !empty($_POST['usu_nm'])) {
     $usu_nm = addslashes(strtolower($_POST['usu_nm']));
+    $usu_dcapl = addslashes($_POST['usu_dcapl']);
     $usu_dceml = addslashes(strtolower($_POST['usu_dceml']));
     $usu_dcsnh = addslashes($_POST['usu_dcsnh']);
     $usu_nrtel = addslashes($_POST['usu_nrtel']);
     
     if(!empty($usu_nm) && !empty($usu_dceml) && !empty($usu_dcsnh)) {
-        if($usuario->cadastrarUsuario($usu_nm, $usu_dceml, $usu_dcsnh, $usu_nrtel)) { ?>
+        if($usuario->cadastrarUsuario($usu_nm, $usu_dcapl, $usu_dceml, $usu_dcsnh, $usu_nrtel)) { ?>
         <div class="row">
             <div class="col-sm-12">
                 <div class="alert alert-success">
@@ -56,6 +57,10 @@ if(isset($_POST['usu_nm']) && !empty($_POST['usu_nm'])) {
                         <label for="usu_nm">Nome:</label>
                         <input class="form-control" type="text" name="usu_nm" id="usu_nm" required=""/>
                     </div> 
+                    <div class="form-group">
+                        <label for="usu_dcapl">Apelido:</label>
+                        <input class="form-control" type="text" name="usu_dcapl" id="usu_dcapl" required=""/>
+                    </div>
                     <div class="form-group">
                         <label for="usu_dceml">E-mail:</label>
                         <input class="form-control" type="email" name="usu_dceml" id="usu_dceml" required=""/>

@@ -97,7 +97,7 @@ if(isset($_POST['anu_dctit']) && !empty($_POST['anu_dctit'])) {
                     <?php foreach($anuncios->getImagensAnuncios($editAnuncios['anu_iduni']) as $fotos): ?>
                         <div class="foto_item">
                             <img src="assets/images/anuncios/<?=$fotos['img_url']?>" class="img-thumbnail" border="0"/><br>
-                            <a href="excluir-imagem.php?img_iduni=<?=$fotos['img_iduni']?>" class="btn btn-danger btn-block">Excluir Imagens</a>
+                            <a href="excluir-foto.php?img_iduni=<?=$fotos['img_iduni']?>" class="btn btn-danger btn-block">Excluir Imagens</a>
                         </div>
                     <?php endforeach; ?>
                     </div>

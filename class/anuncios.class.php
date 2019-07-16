@@ -1,6 +1,26 @@
 <?php
 class Anuncios {
     
+    public function getUltimosAnuncios($page, $perPage) {
+        global $pdo;
+        
+        $offSet = ($page -1) * $perPage;
+        
+        $sql = $pdo->prepare("SELECT *, "
+                . "(SELECT imagens.img_url FROM imagens "
+                . "WHERE imagens.img_iduni_anu = anuncios.anu_iduni LIMIT 1) AS img_url, "
+                . "(SELECT categorias.cat_nm FROM categorias "
+                . "WHERE categorias.cat_iduni = anuncios.anu_iduni_cat LIMIT 1) AS cat_nm "
+                . "FROM anuncios ORDER BY anu_iduni DESC LIMIT $offSet, $perPage");
+        $sql->execute();
+
+        if($sql->rowCount() > 0) {
+            return $sql->fetchAll();
+        } else {
+            return array();
+        }
+    }
+
     public function getMeusAnuncios() {
         global $pdo;
         $sql = $pdo->prepare("SELECT *, (SELECT imagens.img_url FROM imagens "
@@ -8,7 +28,7 @@ class Anuncios {
                 . "FROM anuncios WHERE anu_iduni_usu = :anu_iduni_usu");
         $sql->bindValue(":anu_iduni_usu", $_SESSION['cLogin']);
         $sql->execute();
-        
+
         if($sql->rowCount() > 0) {
             return $sql->fetchAll();
         } else {
@@ -84,7 +104,7 @@ class Anuncios {
         if(count($fotos) > 0) {
             for($q=0;$q<count($fotos['tmp_name']);$q++) {
                 $tipo = $fotos['type'][$q];
-                if(in_array($tipo, array('image/jpeg', 'image/png'))) {
+                if(in_array($tipo, array('image/jpeg', 'image/jpg', 'image/png'))) {
                     $tmpname = md5(time().rand(0,9999)).'.jpg';
                     move_uploaded_file($fotos['tmp_name'][$q], 'assets/images/anuncios/'.$tmpname);
 
@@ -119,6 +139,37 @@ class Anuncios {
                 }
             }
         }
+    }
+    
+    public function qtAnuncios() {
+        global $pdo;
+        $sql = $pdo->query("SELECT COUNT(*) AS qt_anuncios FROM anuncios");
+        
+        if($sql->rowCount() > 0) {
+            return $sql->fetch();
+        } else {
+            return array();
+        }
+  
+    }
+    
+    public function excluirFoto($img_iduni) {
+        global $pdo;
+        $img_iduni_anu = 0;
+        $sql = $pdo->prepare("SELECT img_iduni_anu FROM imagens WHERE img_iduni = :img_iduni");
+        $sql->bindValue(":img_iduni", $img_iduni);
+        $sql->execute();
+        
+        if($sql->rowCount() > 0) {
+            $row = $sql->fetch();
+            $img_iduni_anu = $row['img_iduni_anu'];
+        }
+        
+        $sql = $pdo->prepare("DELETE FROM imagens WHERE img_iduni = :img_iduni");
+        $sql->bindValue(":img_iduni", $img_iduni);
+        $sql->execute();
+        
+        return $img_iduni_anu;
     }
     
 }
