@@ -54,7 +54,7 @@ if(isset($_POST['anu_dctit']) && !empty($_POST['anu_dctit'])) {
                     require './class/categorias.class.php';
                     $categorias = new Categorias();
                     foreach ($categorias->getTodasCategorias() as $row): ?>
-                        <option value="<?=$row['cat_iduni']?>" <?=$editAnuncios['anu_iduni_cat']==$row['cat_iduni']?'selected="selected"':'';?> ><?=$row['cat_nm']?></option> 
+                        <option value="<?=$row['cat_iduni']?>" <?=$editAnuncios['anu_iduni_cat']==$row['cat_iduni']?'selected="selected"':'';?> ><?=  utf8_encode($row['cat_nm'])?></option> 
                     <?php endforeach; ?>
                     </select>
                 </div>

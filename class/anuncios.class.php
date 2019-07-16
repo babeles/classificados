@@ -1,6 +1,34 @@
 <?php
 class Anuncios {
     
+    public function getAnuncio($anu_iduni) {
+            global $pdo;
+            $sql = $pdo->prepare("SELECT *, "
+                    . "(SELECT categorias.cat_nm FROM categorias "
+                    . "WHERE categorias.cat_iduni = anuncios.anu_iduni_cat LIMIT 1) AS cat_nm, "
+                    . "(SELECT usuarios.usu_nrtel FROM usuarios "
+                    . "where usuarios.usu_iduni = anuncios.anu_iduni_usu) as usu_nrtel "
+                    . "FROM anuncios WHERE anu_iduni = :anu_iduni");
+            $sql->bindValue(":anu_iduni", $anu_iduni);
+            $sql->execute();
+            
+            if($sql->rowCount() > 0) {
+                $array = $sql->fetch();
+                $array['fotos'] = array();
+                
+                $sql = $pdo->prepare("SELECT img_iduni, img_url FROM imagens WHERE img_iduni_anu = :img_iduni_anu");
+                $sql->bindValue(":img_iduni_anu", $anu_iduni);
+                $sql->execute();
+                
+                if($sql->rowCount() > 0) {
+                    $array['fotos'] = $sql->fetchAll();
+                }
+            }
+                
+        return $array;
+           
+    }
+    
     public function getUltimosAnuncios($page, $perPage) {
         global $pdo;
         
@@ -143,12 +171,12 @@ class Anuncios {
     
     public function qtAnuncios() {
         global $pdo;
+        $qt_anuncios = 0;
         $sql = $pdo->query("SELECT COUNT(*) AS qt_anuncios FROM anuncios");
         
         if($sql->rowCount() > 0) {
-            return $sql->fetch();
-        } else {
-            return array();
+            $qt_anuncios = $sql->fetch();
+            return $qt_anuncios['qt_anuncios'];
         }
   
     }

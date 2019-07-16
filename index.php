@@ -12,8 +12,8 @@
      $p = addslashes($_GET['p']);
  }
  
- $porPagina = 6;
- //$totalPaginas = ($qtAnuncios / $porPagina);
+$porPagina = 10;
+$totalPaginas = ceil(($qtAnuncios / $porPagina));
 ?>
         
 <div class="container-fluid">
@@ -22,7 +22,7 @@
          $usu_nm = $usuario->getUsuario($_SESSION['cLogin']); ?>        
         <h3>Seja Bem-vindo <?=$usu_nm['usu_dcapl']?></h3>
 <?php endif; ?> 
-        <h4>Nós temos hoje <?=$qtAnuncios['qt_anuncios']?> anúncios.</h4>
+        <h4>Nós temos hoje <?=$qtAnuncios?> anúncios.</h4>
         <h4>E <?=$qtUsuario['qt_usuarios']?> usuários cadastrados.</h4>
     </div>
 
@@ -45,18 +45,18 @@
                         </td>
                         <td>
                             <a href="produto.php?anu_iduni=<?=$row['anu_iduni']?>"><?=$row['anu_dctit']?></a><br>
-                            <?=$row['cat_nm']?>
+                            <?=  utf8_encode($row['cat_nm'])?>
                         </td>
                         <td>R$ <?= number_format($row['anu_vr'],2)?></td>
                     </tr>
                     <?php endforeach; ?>
                 </tbody>
             </table>
-            <!--<ul class="pagination">-->
-            <?php //for ($q = 1; $q <= $totalPaginas; $q++): ?>
-                <!--<li><a href="index.php?p=<?=$q;?>"><?=$q;?></a></li>-->
-            <?php //endfor; ?>
-            <!--</ul>-->
+            <ul class="pagination">
+            <?php for ($q = 1; $q <= $totalPaginas; $q++): ?>
+                <li class="<?=$p==$q?'active':'';?>"><a href="index.php?p=<?=$q;?>"><?=$q;?></a></li>
+            <?php endfor; ?>
+            </ul>
         </div>
     </div>
 </div>   
