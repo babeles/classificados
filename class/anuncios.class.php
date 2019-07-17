@@ -29,17 +29,41 @@ class Anuncios {
            
     }
     
-    public function getUltimosAnuncios($page, $perPage) {
+    public function getUltimosAnuncios($page, $perPage, $filtros) {
         global $pdo;
         
         $offSet = ($page -1) * $perPage;
+        
+        $filtrosString = array('1=1');
+        if(!empty($filtros['categorias'])) {
+            $filtrosString[] = 'anuncios.anu_iduni_cat = :anu_iduni_cat';
+        }
+        if(!empty($filtros['preco'])) {
+            $filtrosString[] = 'anuncios.anu_vr BETWEEN :preco1 AND :preco2';
+        }
+        if(!empty($filtros['estado'])) {
+            $filtrosString[] = 'anuncios.anu_dcest = :anu_dcest';
+        }
         
         $sql = $pdo->prepare("SELECT *, "
                 . "(SELECT imagens.img_url FROM imagens "
                 . "WHERE imagens.img_iduni_anu = anuncios.anu_iduni LIMIT 1) AS img_url, "
                 . "(SELECT categorias.cat_nm FROM categorias "
                 . "WHERE categorias.cat_iduni = anuncios.anu_iduni_cat LIMIT 1) AS cat_nm "
-                . "FROM anuncios ORDER BY anu_iduni DESC LIMIT $offSet, $perPage");
+                . "FROM anuncios "
+                . "WHERE ". implode(' AND ',$filtrosString)." ORDER BY anu_iduni DESC LIMIT $offSet, $perPage");
+        
+        if(!empty($filtros['categorias'])) {
+            $sql->bindValue(":anu_iduni_cat", $filtros['categorias']);
+        }
+        if(!empty($filtros['preco'])) {
+            $preco = explode('-', $filtros['preco']);
+            $sql->bindValue(":preco1", $preco[0]);
+            $sql->bindValue(":preco2", $preco[1]);
+        }
+        if(!empty($filtros['estado'])) {
+            $sql->bindValue(":anu_dcest", $filtros['estado']);
+        }
         $sql->execute();
 
         if($sql->rowCount() > 0) {
@@ -169,10 +193,35 @@ class Anuncios {
         }
     }
     
-    public function qtAnuncios() {
+    public function qtAnuncios($filtros) {
         global $pdo;
+        
+        $filtrosString = array('1=1');
+        if(!empty($filtros['categorias'])) {
+            $filtrosString[] = 'anuncios.anu_iduni_cat = :anu_iduni_cat';
+        }
+        if(!empty($filtros['preco'])) {
+            $filtrosString[] = 'anuncios.anu_vr BETWEEN :preco1 AND :preco2';
+        }
+        if(!empty($filtros['estado'])) {
+            $filtrosString[] = 'anuncios.anu_dcest = :anu_dcest';
+        }
+        
         $qt_anuncios = 0;
-        $sql = $pdo->query("SELECT COUNT(*) AS qt_anuncios FROM anuncios");
+        $sql = $pdo->prepare("SELECT COUNT(*) AS qt_anuncios FROM anuncios "
+                . "WHERE ". implode(' AND ',$filtrosString)."");
+        if(!empty($filtros['categorias'])) {
+            $sql->bindValue(":anu_iduni_cat", $filtros['categorias']);
+        }
+        if(!empty($filtros['preco'])) {
+            $preco = explode('-', $filtros['preco']);
+            $sql->bindValue(":preco1", $preco[0]);
+            $sql->bindValue(":preco2", $preco[1]);
+        }
+        if(!empty($filtros['estado'])) {
+            $sql->bindValue(":anu_dcest", $filtros['estado']);
+        }
+        $sql->execute();
         
         if($sql->rowCount() > 0) {
             $qt_anuncios = $sql->fetch();
